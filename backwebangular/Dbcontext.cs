@@ -8,24 +8,24 @@ using System.Threading.Tasks;
 
 namespace backwebangular
 {
-    public class Dbcontext : DbContext
+    public partial class Dbcontext : DbContext
     {
-       public DbSet<Newstudentm1DB> new_student_register_m1 { get; set; }
-       public DbSet<Newstudentm4DB> new_student_register_m4 { get; set; } 
-       
-
         public Dbcontext()
         {
-
         }
+
         public Dbcontext(DbContextOptions options) : base(options)
         {
 
         }
+        public virtual DbSet<Newstudentm1DB> new_student_register_m1 { get; set; }
+        public virtual DbSet<Newstudentm4DB> new_student_register_m4 { get; set; }
+        public virtual DbSet<StudentCoreInformationDB> student_information_core { get; set; }
+        public virtual DbSet<RegisterMajorDB> register_major_m4 { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if(!optionsBuilder.IsConfigured)
+            if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseMySql("server=localhost;user=root;password=1234;database=pwkswebangular");
             }
