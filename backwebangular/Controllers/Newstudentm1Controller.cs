@@ -5,100 +5,98 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-//
+using System.IO;
+using System.Net.Http.Headers;
+
 namespace backwebangular.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class Newstudentm1Controller : Controller
-    {
-        private readonly Dbcontext _context;
-
-        public Newstudentm1Controller(Dbcontext context)
+{ 
+        [Route("api/[controller]")]
+        [ApiController]
+        public class Newstudentm1Controller : Controller
         {
-            _context = context;
-        }
+            private readonly Dbcontext _context;
 
-        [HttpGet]
-        public ActionResult<List<Newstudentm1DB>> Get()
-        {
-            try
+            public Newstudentm1Controller(Dbcontext context)
             {
-                var listNewstudentm1 = _context.new_student_register_m1.ToList();
-                return Ok(listNewstudentm1);
+                _context = context;
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
-        [HttpGet("{id}")]
-        public ActionResult<Newstudentm1DB> Get(int id)
-        {
-            try
+            [HttpGet]
+            public async Task<ActionResult<IEnumerable<Newstudentm1DB>>> GetNewstudentm1()
             {
-                var Newstudentm1 = _context.new_student_register_m1.Find(id);
-                if (Newstudentm1 == null)
+                return await _context.new_student_register_m1.ToListAsync();
+            }
+
+            [HttpGet("{id}")]
+            public async Task<ActionResult<Newstudentm1DB>> GetNewstudentm1(int id)
+            {
+                var newstudentm1 = await _context.new_student_register_m1.FindAsync(id);
+                if (newstudentm1 == null)
                 {
                     return NotFound();
                 }
-                return Ok(Newstudentm1);
+                return newstudentm1;
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
-        [HttpPost]
-        public ActionResult Post([FromBody] Newstudentm1DB Newstudentm1)
-        {
-            try
+            [HttpPost]
+            public async Task<ActionResult<Newstudentm1DB>> PostNewstudentm1(Newstudentm1DB newstudentm1)
             {
-                _context.Add(Newstudentm1);
-                _context.SaveChanges();
-                return Ok();
+                _context.new_student_register_m1.Add(newstudentm1);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetNewstudentm1), new { id = newstudentm1.id }, newstudentm1);
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
-        [HttpPut("{id}")]
-        public ActionResult Put(int id, [FromBody] Newstudentm1DB Newstudentm1)
-        {
-            try
+           
+
+            [HttpPut("{id}")]
+            public async Task<IActionResult> PutNewstudentm1(int id, Newstudentm1DB newstudentm1)
             {
-               if (id != Newstudentm1.id)
+                if (id != newstudentm1.id)
                 {
                     return BadRequest();
                 }
-                _context.Entry(Newstudentm1).State = EntityState.Modified;
-                _context.Update(Newstudentm1);
-                _context.SaveChanges();
-                return Ok();
+
+                _context.Entry(newstudentm1).State = EntityState.Modified;
+
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!Newstudentm1Exists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return NoContent();
             }
-            catch (Exception ex)
+
+            [HttpDelete("{id}")]
+            public async Task<ActionResult> DeleteNewstudentm1DB(int id)
             {
-                return BadRequest(ex.Message);
-            }
-        }
+                var newstudentm1DB = await _context.new_student_register_m1.FindAsync(id);
+                if (newstudentm1DB == null)
+                {
+                    return NotFound();
+                }
+                _context.new_student_register_m1.Remove(newstudentm1DB);
+                await _context.SaveChangesAsync();
 
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteNewstudentm1DB(int id)
-        {
-            var newstudentm1DB = await _context.new_student_register_m1.FindAsync(id);
-            if (newstudentm1DB == null)
+                return NoContent();
+            }
+
+            private bool Newstudentm1Exists(int id)
             {
-                return BadRequest();
+                return _context.new_student_register_m1.Any(e => e.id == id);
             }
-            _context.new_student_register_m1.Remove(newstudentm1DB);
-            await _context.SaveChangesAsync();
 
-            return NoContent();
         }
-
-    }
 }
+
+
+

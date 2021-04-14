@@ -13,7 +13,7 @@ namespace backwebangular.Models
         public string prename { get; set; }
         public string name { get; set; }
         public string surname { get; set; }
-        public Boolean sex { get; set; }
+        public string sex { get; set; }
         public string pic { get; set; }
         public string id_number { get; set; }
         public string birthday { get; set; }
