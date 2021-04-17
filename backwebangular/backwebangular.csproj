@@ -26,5 +26,9 @@
     <Folder Include="Resources\pic\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\pic\" />
+  </ItemGroup>
+
 
 </Project>

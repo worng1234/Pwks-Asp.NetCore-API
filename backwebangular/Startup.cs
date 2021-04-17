@@ -19,6 +19,8 @@ using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Swagger;
 using Swashbuckle.Swagger;
 
+
+
 namespace backwebangular
 {
     public class Startup
@@ -38,27 +40,6 @@ namespace backwebangular
             //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
             services.AddDbContext<Dbcontext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
             
-            services.AddCors(Options =>
-            {
-                Options.AddPolicy("CorsPolicy",
-                    builder => builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-            });
-
-            services.Configure<FormOptions>(o => {
-                o.ValueLengthLimit = int.MaxValue;
-                o.MultipartBodyLengthLimit = int.MaxValue;
-                o.MemoryBufferThreshold = int.MaxValue;
-            });
-
-            
-
-            services.AddControllers();
-
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
