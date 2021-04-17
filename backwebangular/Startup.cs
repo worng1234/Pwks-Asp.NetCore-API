@@ -17,7 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.Swagger;
+using Microsoft.OpenApi.Models;
 
 namespace backwebangular
 {
@@ -33,31 +33,21 @@ namespace backwebangular
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            
-            //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
-            services.AddDbContext<Dbcontext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
-            
-            services.AddCors(Options =>
+            services.AddControllers();
+            services.AddCors(options =>
             {
-                Options.AddPolicy("CorsPolicy",
+                options.AddPolicy("Corpolicy",
                     builder => builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
-
-            services.Configure<FormOptions>(o => {
-                o.ValueLengthLimit = int.MaxValue;
-                o.MultipartBodyLengthLimit = int.MaxValue;
-                o.MemoryBufferThreshold = int.MaxValue;
-            });
-
+            //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
+            services.AddDbContext<Dbcontext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
+            services.AddSwaggerGen();
             
 
-            services.AddControllers();
-
-
+           
 
         }
 
@@ -68,11 +58,23 @@ namespace backwebangular
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseCors("CorsPolicy");
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
+            
 
             app.UseStaticFiles();
             app.UseStaticFiles(new StaticFileOptions()
@@ -82,9 +84,8 @@ namespace backwebangular
             });
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace backwebangular.Models
 {
-    public class Newstudentm4DB
+    public partial class Newstudentm4DB
     {
+        public Newstudentm4DB()
+        {
+            RegisterMajor = new HashSet<RegisterMajorDB>();
+        }
+        [Key]
         public int id { get; set; }
         public string prename { get; set; }
         public string name { get; set; }
@@ -46,6 +53,8 @@ namespace backwebangular.Models
         public string disabled { get; set; }
         public string poor_person { get; set; }
         public string etc { get; set; }
+        public string major_name { get; set; }
+        public ICollection<RegisterMajorDB> RegisterMajor { get; set; } 
         
         
     }

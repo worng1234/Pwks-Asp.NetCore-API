@@ -1,4 +1,5 @@
 ﻿using backwebangular.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -48,12 +49,39 @@ namespace backwebangular.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Newstudentm4DB>> PostNewstudentm4DB(Newstudentm4DB newstudentm4DB)
+        /*public async Task<ActionResult<Newstudentm4DB>> PostNewstudentm4DB(Newstudentm4DB newstudentm4DB)
         {
             _context.new_student_register_m4.Add(newstudentm4DB);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetNewstudentm4), new { id = newstudentm4DB.id }, newstudentm4DB);
+           
+        }*/
+        public async Task<ActionResult> PostNewstudentm4DB(Newstudentm4DB newstudentm4DB)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    newstudentm4DB.RegisterMajor.Add(new RegisterMajorDB()
+                    {
+                        id_number = newstudentm4DB.id_number,
+                        major_name = newstudentm4DB.major_name
+                    });
+                    _context.new_student_register_m4.Add(newstudentm4DB);
+                    await _context.SaveChangesAsync();
+                    return Ok("Insert succes");
+                }
+                else
+                {
+                    return BadRequest("Failed to insert!");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+
         }
 
         [HttpPut("{id}")]
