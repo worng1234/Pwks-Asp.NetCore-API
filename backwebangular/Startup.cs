@@ -33,21 +33,29 @@ namespace backwebangular
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-            services.AddCors(options =>
+            
+            
+            //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
+            services.AddDbContext<Dbcontext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
+            
+            services.AddCors(Options =>
             {
-                options.AddPolicy("Corpolicy",
+                Options.AddPolicy("CorsPolicy",
                     builder => builder
                     .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
-            //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
-            services.AddDbContext<Dbcontext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
-            services.AddSwaggerGen();
-            
 
-           
+            services.Configure<FormOptions>(o => {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
+
+
+            services.AddControllers();
+
 
         }
 

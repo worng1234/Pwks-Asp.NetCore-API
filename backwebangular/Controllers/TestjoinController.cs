@@ -22,10 +22,9 @@ namespace backwebangular.Controllers
                                         id = m4.id,
                                         name = m4.prename + m4.name + m4.surname,
                                         id_number = m4.id_number,
-                                        major_name = rm4.major_name
+                                        major_name = rm4.major_name,
                                     }).ToList();
-            
-            return Newstudentm4List;       
+            return Newstudentm4List;
         }
     }
 }
