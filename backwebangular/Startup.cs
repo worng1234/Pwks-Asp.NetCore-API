@@ -46,16 +46,12 @@ namespace backwebangular
                     .AllowAnyMethod()
                     .AllowAnyHeader());
             });
+            //services.AddTransient<MySqlConnection>(_ => new MySqlConnection(Configuration["ConnectionStrings:Default"]));
+            services.AddDbContext<Dbcontext>(options => options.UseMySql(Configuration.GetConnectionString("Default")));
+            services.AddSwaggerGen();
+            
 
-            services.Configure<FormOptions>(o => {
-                o.ValueLengthLimit = int.MaxValue;
-                o.MultipartBodyLengthLimit = int.MaxValue;
-                o.MemoryBufferThreshold = int.MaxValue;
-            });
-
-
-            services.AddControllers();
-
+           
 
         }
 
